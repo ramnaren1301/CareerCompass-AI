@@ -2645,3 +2645,141 @@ svg.icon {
 @media (max-width: 620px) {
   .route-checkpoint { padding: 13px; }
 }
+
+/* Native WebMCP registration status */
+.mcp-status.native-ready { color: #18794e; }
+.mcp-status.native-ready i { background: #2bb673; box-shadow: 0 0 0 4px rgba(43,182,115,.12); }
+.mcp-status.native-checking { color: #6b7280; }
+.mcp-status.native-checking i { background: #f5a524; box-shadow: 0 0 0 4px rgba(245,165,36,.12); }
+button.mcp-status.native-failed { border: 1px solid #fecaca; background: #fff7f7; color: #b42318; cursor: pointer; font: inherit; }
+button.mcp-status.native-failed:hover { background: #fff0f0; }
+button.mcp-status.native-failed i { background: #e5484d; box-shadow: 0 0 0 4px rgba(229,72,77,.12); }
+
+
+/* Native WebMCP diagnostics drawer */
+.drawer-scroll-content {
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  align-content: start;
+  gap: 13px;
+  padding-right: 2px;
+}
+
+.native-webmcp-card,
+.local-tool-card {
+  display: grid;
+  gap: 11px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface);
+}
+
+.native-webmcp-card.ready {
+  border-color: rgba(43, 182, 115, .25);
+  background: linear-gradient(180deg, rgba(233, 249, 241, .82), #fff);
+}
+
+.native-webmcp-card.not-ready {
+  border-color: rgba(229, 72, 77, .2);
+  background: linear-gradient(180deg, rgba(255, 247, 247, .95), #fff);
+}
+
+.native-card-heading,
+.local-tool-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.native-card-heading span,
+.local-tool-heading span {
+  color: var(--blue);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.native-card-heading h3 {
+  margin: 4px 0 0;
+  font-size: 15px;
+}
+
+.native-webmcp-card > p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.native-recheck {
+  min-height: 31px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.native-diagnostic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.native-diagnostic-grid > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 9px;
+  background: var(--surface-alt);
+  font-size: 8px;
+}
+
+.native-diagnostic-grid strong.pass { color: var(--green); }
+.native-diagnostic-grid strong.fail { color: var(--red); }
+.native-diagnostic-grid strong.unknown { color: #8a5d0a; }
+
+.native-failure,
+.native-setup-steps {
+  padding: 10px;
+  border-radius: 11px;
+  background: #fff4f4;
+  color: var(--ink-soft);
+  font-size: 8px;
+  line-height: 1.55;
+}
+
+.native-failure strong,
+.native-failure span { display: block; }
+.native-failure strong { color: var(--red); margin-bottom: 3px; }
+.native-failure span { overflow-wrap: anywhere; }
+.native-setup-steps { background: #fff8e6; }
+.native-setup-steps > strong { color: #8a5d0a; }
+.native-setup-steps ol { margin: 6px 0 0; padding-left: 17px; }
+.native-setup-steps code { font-size: 7.5px; overflow-wrap: anywhere; }
+
+.local-tool-heading strong {
+  min-width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--blue);
+  background: var(--blue-soft);
+  font-size: 8px;
+}
+
+.drawer-scroll-content .tool-log {
+  overflow: visible;
+}

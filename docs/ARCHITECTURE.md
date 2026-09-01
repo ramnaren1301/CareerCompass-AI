@@ -1,4 +1,4 @@
-# PathwayOS 2.1 Architecture
+# PathwayOS 2.3 Architecture
 
 ## Design principle
 
@@ -139,9 +139,9 @@ Funding is optional and follows the same rule. Generic directories are not displ
 
 ## WebMCP layer
 
-`src/webmcp.js` defines 33 tools once. The same contracts are used by:
+`src/webmcp.js` defines 33 contracts and shared handlers once. `src/site-tools.js` registers each through a checked-in, literal `document.modelContext.registerTool({ ... })` call from the top-level page. The same contracts are used by:
 
-- native `document.modelContext.registerTool()` registration when available
+- native imperative registration when available
 - the built-in browser runtime
 - the career-buddy orchestration
 - unit and browser tests

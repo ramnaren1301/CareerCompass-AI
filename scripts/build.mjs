@@ -12,6 +12,7 @@ const required = [
   "styles.css",
   "src/app.js",
   "src/webmcp.js",
+  "src/site-tools.js",
   "src/buddy-journey.js",
   "data/pathwayos-career-catalog.json",
   "manifest.webmanifest",
@@ -23,7 +24,7 @@ for (const file of required) {
 
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
-for (const item of ["index.html", "styles.css", "manifest.webmanifest", "service-worker.js", "src", "public", "data"]) {
+for (const item of ["index.html", "styles.css", "manifest.webmanifest", "service-worker.js", "_headers", "src", "public", "data", "_headers", "vercel.json", "netlify.toml"]) {
   await cp(resolve(root, item), resolve(dist, item), { recursive: true });
 }
 await writeFile(

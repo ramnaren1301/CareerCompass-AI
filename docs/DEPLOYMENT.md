@@ -6,6 +6,7 @@ PathwayOS is a static browser application with no runtime package dependencies.
 
 ```bash
 npm test
+npm run check:webmcp
 npm run build
 ```
 
@@ -31,16 +32,17 @@ styles.css
 manifest.webmanifest
 service-worker.js
 src/
+  site-tools.js
 data/pathwayos-career-catalog.json
 public/icon.svg
 ```
 
 ## Cache update
 
-Version 2.1 uses service-worker cache:
+Version 2.3 uses service-worker cache:
 
 ```text
-pathwayos-v7-selection-first-career-buddy
+pathwayos-v9-native-webmcp-diagnostics
 ```
 
 When replacing a v1.x deployment, deploy the complete `dist/` directory and perform one hard refresh so the browser removes the old multi-screen application cache and stored UI state.
@@ -78,3 +80,15 @@ python scripts/career-buddy-browser-check.py
 ```
 
 The harness executes the built production modules through an inline import map. Results are written to `docs/career-buddy-e2e-results.json`.
+
+
+## Required WebMCP headers
+
+All responses must include:
+
+```http
+Origin-Agent-Cluster: ?1
+Permissions-Policy: tools=(self), camera=(), microphone=(), geolocation=()
+```
+
+The Node server, Vercel configuration, Netlify configuration, and `_headers` file include these values. Close the old tab and open a new one after changing origin isolation.

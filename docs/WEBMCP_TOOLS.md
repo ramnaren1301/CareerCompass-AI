@@ -2,6 +2,15 @@
 
 PathwayOS registers **33 imperative site tools**. **25 are read/reason tools** and **8 are approval-gated writes**. The headings below describe tool domains, not independent student screens. The Career Buddy invokes only the domains needed by the current selected branch. Every write returns a pending approval rather than applying a persistent change.
 
+## Repository implementation
+
+- `src/webmcp.js` defines the strict contracts and shared handlers.
+- `src/site-tools.js` contains 33 direct, literal `document.modelContext.registerTool({ ... })` calls.
+- `src/app.js` invokes registration during top-level page startup.
+- `npm run check:webmcp` validates source visibility and runtime behavior.
+
+`search_products` in the challenge rule is an illustrative example. PathwayOS registers domain-specific tools such as `list_career_fields`, `simulate_degree_plan`, and `find_internships`.
+
 ## Career Catalog — attached JSON
 
 | Tool | Mode | Purpose |
@@ -67,29 +76,16 @@ All five tools use `untrustedContentHint: true`. Records whose JSON `url` is nul
 | `build_personalized_pathway` | Read | Build the complete student pathway |
 | `get_pending_approvals` | Read | Read pending student approvals |
 
-## JSON tool contract example
+## Direct registration example from `src/site-tools.js`
 
 ```javascript
 await document.modelContext.registerTool({
   name: "explore_career_path",
-  title: "Explore one career path",
-  description: "Read one JSON-backed career field without inventing missing links.",
-  inputSchema: {
-    type: "object",
-    properties: {
-      topic: { type: "string" },
-      role: { type: "string" }
-    },
-    required: ["topic"],
-    additionalProperties: false
-  },
-  annotations: {
-    readOnlyHint: true,
-    untrustedContentHint: true
-  },
-  execute: async (input, { signal }) => {
-    // Shared PathwayOS handler used by native WebMCP and the demo runtime.
-  }
+  description: exploreCareerPath.description,
+  inputSchema: exploreCareerPath.inputSchema,
+  execute: async (input) => exploreCareerPath.execute(input, { signal }),
+  title: exploreCareerPath.title,
+  annotations: exploreCareerPath.annotations,
 }, { signal });
 ```
 

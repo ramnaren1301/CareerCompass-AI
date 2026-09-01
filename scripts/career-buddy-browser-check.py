@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Browser regression for PathwayOS v2.1 selection-first Career Buddy."""
+"""Browser regression for PathwayOS v2.3 native-ready selection-first Career Buddy."""
 from __future__ import annotations
 
 import base64
@@ -139,7 +139,7 @@ def verify_document_scroll(page: Page, label: str) -> None:
 def main() -> None:
     results: dict[str, Any] = {
         "product": "PathwayOS Career Buddy",
-        "version": "2.1.0",
+        "version": "2.3.0",
         "mode": "inline-production-build",
         "checks": [],
         "errors": [],

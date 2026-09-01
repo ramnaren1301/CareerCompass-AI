@@ -1,0 +1,35 @@
+{
+  "product": "PathwayOS Career Buddy",
+  "version": "2.3.0",
+  "issue": "Chrome DevTools Application > WebMCP showed zero Available Tools in v2.2",
+  "sourceFindings": {
+    "v2.2FalsePositiveStatus": "The app displayed Career Buddy connected and used 33 as fallback count even when document.modelContext was unavailable.",
+    "v2.2OriginIsolationHeaderMissing": "The local server did not send Origin-Agent-Cluster: ?1.",
+    "v2.2ToolsPolicyNotExplicit": "The local server did not explicitly declare the tools Permissions Policy.",
+    "v2.2NativeDiscoveryNotVerified": "Tests mocked registerTool but did not compare registration with document.modelContext.getTools().",
+    "staleServiceWorkerRisk": "A previous service worker could serve stale HTML/JavaScript on localhost."
+  },
+  "fixes": {
+    "originAgentClusterHeader": "?1",
+    "permissionsPolicy": "tools=(self), camera=(), microphone=(), geolocation=()",
+    "directRegisterToolCalls": 33,
+    "postRegistrationGetToolsVerification": true,
+    "truthfulNativeStatus": true,
+    "localhostServiceWorkerCleanup": true,
+    "consoleDiagnostics": "await window.PathwayOSWebMCP.diagnostics()"
+  },
+  "validation": {
+    "nodeTests": {
+      "passed": 38,
+      "failed": 0
+    },
+    "browserChecks": {
+      "passed": 13,
+      "failed": 0
+    },
+    "repositoryWebMCPCheck": "PASS",
+    "serverHeaderCurlCheck": "PASS",
+    "actualChromeWebMCPPanel": "Must be confirmed in a WebMCP-enabled Chrome build; this container does not expose that experimental panel/API."
+  },
+  "generatedAt": "2026-09-01T15:52:00Z"
+}

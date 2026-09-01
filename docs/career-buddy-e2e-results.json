@@ -1,6 +1,6 @@
 {
   "product": "PathwayOS Career Buddy",
-  "version": "2.1.0",
+  "version": "2.3.0",
   "mode": "inline-production-build",
   "checks": [
     "Fresh load shows six supported career areas and no open-ended career input",

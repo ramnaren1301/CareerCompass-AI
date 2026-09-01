@@ -113,6 +113,11 @@ export function createInitialState() {
     agentDraft: "",
     nativeWebMCP: false,
     registeredToolCount: 0,
+    webMCPExpectedToolCount: 33,
+    webMCPStatus: "checking",
+    webMCPFailures: [],
+    webMCPDiscoveredToolNames: [],
+    webMCPEnvironment: null,
     notice: null,
   };
 }
@@ -363,6 +368,11 @@ export function createStore(initial = createInitialState()) {
     const runtimeState = {
       nativeWebMCP: state.nativeWebMCP,
       registeredToolCount: state.registeredToolCount,
+      webMCPExpectedToolCount: state.webMCPExpectedToolCount,
+      webMCPStatus: state.webMCPStatus,
+      webMCPFailures: state.webMCPFailures,
+      webMCPDiscoveredToolNames: state.webMCPDiscoveredToolNames,
+      webMCPEnvironment: state.webMCPEnvironment,
       careerCatalogStatus: state.careerCatalogStatus,
     };
     state = { ...createInitialState(), ...runtimeState };
