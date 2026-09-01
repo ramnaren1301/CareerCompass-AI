@@ -1,0 +1,17 @@
+{
+  "name": "PathwayOS Career Buddy",
+  "short_name": "PathwayOS",
+  "description": "One continuous academic-to-career journey, guided by WebMCP.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#111b3b",
+  "icons": [
+    {
+      "src": "/public/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
