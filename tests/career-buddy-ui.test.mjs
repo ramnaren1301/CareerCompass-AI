@@ -54,7 +54,8 @@ test("old dashboard state does not force a default ML career", () => {
 
 test("offline caching uses the continuous career-buddy assets", async () => {
   const serviceWorker = await readFile(new URL("../service-worker.js", import.meta.url), "utf8");
-  assert.match(serviceWorker, /pathwayos-v7-selection-first-career-buddy/);
+  assert.match(serviceWorker, /pathwayos-v9-native-webmcp-diagnostics/);
   assert.match(serviceWorker, /\/src\/buddy-journey\.js/);
+  assert.match(serviceWorker, /\/src\/site-tools\.js/);
   assert.doesNotMatch(serviceWorker, /\/src\/chat-intents\.js/);
 });

@@ -1,9 +1,9 @@
 {
   "name": "pathwayos-webmcp",
-  "version": "2.1.0",
+  "version": "2.3.0",
   "private": true,
   "type": "module",
-  "description": "A scrollable, selection-first WebMCP career-buddy journey constrained to the supported career catalog.",
+  "description": "A selection-first WebMCP career buddy with native Chrome registration diagnostics, origin isolation, and 33 direct document.modelContext.registerTool calls.",
   "scripts": {
     "catalog:sync": "node scripts/sync-career-catalog.mjs",
     "predev": "npm run catalog:sync",
@@ -12,7 +12,8 @@
     "test": "node --test tests/*.test.mjs",
     "build": "node scripts/build.mjs",
     "start": "node server.mjs --root dist --port 3000",
-    "test:browser": "python scripts/career-buddy-browser-check.py"
+    "test:browser": "python scripts/career-buddy-browser-check.py",
+    "check:webmcp": "node scripts/check-webmcp.mjs"
   },
   "engines": {
     "node": ">=20"

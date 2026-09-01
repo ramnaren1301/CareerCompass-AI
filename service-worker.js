@@ -1,8 +1,8 @@
-const CACHE = "pathwayos-v7-selection-first-career-buddy";
+const CACHE = "pathwayos-v9-native-webmcp-diagnostics";
 const ASSETS = [
   "/", "/index.html", "/styles.css", "/service-worker.js",
   "/src/app.js", "/src/data.js", "/src/engine.js", "/src/store.js",
-  "/src/webmcp.js", "/src/buddy-journey.js", "/src/icons.js", "/src/dom-patch.js",
+  "/src/webmcp.js", "/src/site-tools.js", "/src/buddy-journey.js", "/src/icons.js", "/src/dom-patch.js",
   "/src/career-catalog.js", "/src/career-catalog-data.js",
   "/data/pathwayos-career-catalog.json", "/public/icon.svg",
 ];

@@ -13,6 +13,19 @@
 <body>
   <div id="app" class="app-shell"><div class="boot-screen"><div class="boot-mark">P</div><strong>PathwayOS</strong><span>Preparing your guided career pathway…</span></div></div>
   <noscript>PathwayOS requires JavaScript to run the interactive roadmap and WebMCP tools.</noscript>
-  <script type="module" src="./src/app.js"></script>
+  <script type="module">
+    const isLocal = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(location.hostname);
+    if (isLocal && "serviceWorker" in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations
+        .filter((registration) => registration.scope.startsWith(location.origin))
+        .map((registration) => registration.unregister()));
+      if ("caches" in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.filter((key) => key.startsWith("pathwayos-")).map((key) => caches.delete(key)));
+      }
+    }
+    await import("./src/app.js?v=2.3.0");
+  </script>
 </body>
 </html>

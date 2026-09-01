@@ -28,12 +28,16 @@ import {
 } from "./buddy-journey.js";
 
 const root = document.getElementById("app");
-const JOURNEY_STORAGE_KEY = "pathwayos-career-buddy-v2.1-selection-first";
+const JOURNEY_STORAGE_KEY = "pathwayos-career-buddy-v2.3-selection-first";
 const catalogStatus = await loadCareerCatalog();
 const dataStore = createStore();
 dataStore.setState({ careerCatalogStatus: catalogStatus }, { persist: false });
 const runtime = createWebMCPRuntime(dataStore);
-await runtime.register();
+let nativeWebMCPRegistration = await runtime.register();
+if (!nativeWebMCPRegistration.native) {
+  const log = nativeWebMCPRegistration.status === "api_unavailable" ? console.warn : console.error;
+  log("[PathwayOS WebMCP] Native registration is not active.", nativeWebMCPRegistration);
+}
 
 let journey = loadJourney();
 let renderFrame = 0;
@@ -233,6 +237,25 @@ function renderApp() {
   </div>`;
 }
 
+function renderNativeWebMCPStatus() {
+  const state = dataStore.getState();
+  const expected = state.webMCPExpectedToolCount || runtime.definitions.length;
+  const count = Number.isInteger(state.registeredToolCount) ? state.registeredToolCount : 0;
+  const status = state.webMCPStatus || "checking";
+  const environment = state.webMCPEnvironment || {};
+  const failure = state.webMCPFailures?.[0]?.error || "";
+
+  if (status === "registered" && count === expected) {
+    return `<span class="mcp-status native-ready" title="Chrome confirmed ${count} native WebMCP tools on this page"><i></i>${count} WebMCP tools registered</span>`;
+  }
+  if (status === "checking") {
+    return `<span class="mcp-status native-checking" title="Checking Chrome native WebMCP registration"><i></i>Checking WebMCP…</span>`;
+  }
+  const reason = failure
+    || (environment.registerToolType !== "function" ? "document.modelContext.registerTool is unavailable" : "Native registration did not complete");
+  return `<button class="mcp-status native-failed" data-action="open-webmcp-diagnostics" title="${escapeHtml(reason)}"><i></i>WebMCP ${count}/${expected}</button>`;
+}
+
 function renderHeader(progress, step) {
   return `<header class="buddy-header" data-key="buddy-header">
     <div class="brand-lockup">
@@ -244,7 +267,7 @@ function renderHeader(progress, step) {
       <div class="progress-track"><i style="width:${progress}%"></i></div>
     </div>
     <div class="header-actions">
-      <span class="mcp-status" title="${dataStore.getState().registeredToolCount || runtime.definitions.length} structured WebMCP tools are available behind this conversation"><i></i>Career Buddy connected</span>
+      ${renderNativeWebMCPStatus()}
       <button class="quiet-button" data-action="toggle-activity">${icon("activity", 16)} <span>Agent activity</span></button>
       <button class="quiet-button danger" data-action="start-over">${icon("refresh", 16)} <span>Start over</span></button>
     </div>
@@ -771,17 +794,56 @@ function renderFocusPanel() {
   </aside>`;
 }
 
+function renderNativeDiagnostics() {
+  const state = dataStore.getState();
+  const environment = state.webMCPEnvironment || {};
+  const expected = state.webMCPExpectedToolCount || runtime.definitions.length;
+  const count = Number.isInteger(state.registeredToolCount) ? state.registeredToolCount : 0;
+  const status = state.webMCPStatus || "checking";
+  const firstFailure = state.webMCPFailures?.[0]?.error || "";
+  const row = (label, value, good) => `<div><span>${escapeHtml(label)}</span><strong class="${good === true ? "pass" : good === false ? "fail" : "unknown"}">${escapeHtml(String(value))}</strong></div>`;
+  const ready = status === "registered" && count === expected;
+  return `<section class="native-webmcp-card ${ready ? "ready" : "not-ready"}">
+    <div class="native-card-heading">
+      <div><span>Chrome-native WebMCP</span><h3>${ready ? `${count} tools discoverable` : `${count} of ${expected} tools discoverable`}</h3></div>
+      <button data-action="recheck-webmcp" class="native-recheck">${icon("refresh", 14)} Recheck</button>
+    </div>
+    <p>${ready ? "Chrome confirmed the registered PathwayOS tools through document.modelContext.getTools()." : "The Career Buddy can still use its local handlers, but Chrome has not confirmed the native tool registry."}</p>
+    <div class="native-diagnostic-grid">
+      ${row("Secure context", environment.secureContext ?? "Unknown", environment.secureContext === true)}
+      ${row("Origin-isolated", environment.originAgentCluster ?? "Unknown", environment.originAgentCluster === true)}
+      ${row("Top-level page", environment.topLevelDocument ?? "Unknown", environment.topLevelDocument === true)}
+      ${row("registerTool", environment.registerToolType || "undefined", environment.registerToolType === "function")}
+      ${row("getTools", environment.getToolsType || "undefined", environment.getToolsType === "function")}
+      ${row("Tools policy", environment.toolsPolicyAllowed ?? "Unknown", environment.toolsPolicyAllowed !== false)}
+    </div>
+    ${firstFailure ? `<div class="native-failure"><strong>Registration reason</strong><span>${escapeHtml(firstFailure)}</span></div>` : ""}
+    ${ready ? "" : `<div class="native-setup-steps"><strong>Required local setup</strong><ol>
+      <li>Enable <code>chrome://flags/#enable-webmcp-testing</code> and fully relaunch Chrome.</li>
+      <li>Close all existing <code>localhost:3000</code> tabs and open a completely new tab.</li>
+      <li>Keep this app running with <code>npm run dev</code>; v2.3 sends <code>Origin-Agent-Cluster: ?1</code>.</li>
+      <li>Open Application → WebMCP. The Available Tools section should show ${expected} entries.</li>
+    </ol></div>`}
+  </section>`;
+}
+
 function renderActivityDrawer() {
   if (!journey.activityOpen) return "";
   return `<div class="drawer-backdrop" data-action="toggle-activity" data-key="drawer-backdrop"></div>
   <aside class="activity-drawer" data-key="activity-drawer" aria-label="Career buddy tool activity">
     <div class="drawer-header"><div><span>Behind the conversation</span><h2>WebMCP activity</h2></div><button data-action="toggle-activity" aria-label="Close activity">${icon("x", 19)}</button></div>
-    <p class="drawer-intro">Technical details stay here so the student journey remains focused. Only tools used by your selected path appear.</p>
-    <div class="tool-log">
-      ${journey.toolLog.length ? journey.toolLog.map((entry) => `<article class="tool-log-row ${entry.status}" data-key="${entry.id}">
-        <span>${icon(entry.status === "completed" ? "check" : "info", 15)}</span>
-        <div><strong>${escapeHtml(entry.name)}</strong><small>${escapeHtml(entry.label)} · ${entry.durationMs} ms</small></div>
-      </article>`).join("") : `<div class="empty-tool-log">No tools have run yet. Your first supported-field selection will start the trace.</div>`}
+    <p class="drawer-intro">Chrome-native registration is shown separately from PathwayOS local tool calls. A local tool call does not mean Chrome registered the tool.</p>
+    <div class="drawer-scroll-content">
+      ${renderNativeDiagnostics()}
+      <section class="local-tool-card">
+        <div class="local-tool-heading"><span>Career Buddy calls</span><strong>${journey.toolLog.length}</strong></div>
+        <div class="tool-log">
+          ${journey.toolLog.length ? journey.toolLog.map((entry) => `<article class="tool-log-row ${entry.status}" data-key="${entry.id}">
+            <span>${icon(entry.status === "completed" ? "check" : "info", 15)}</span>
+            <div><strong>${escapeHtml(entry.name)}</strong><small>${escapeHtml(entry.label)} · ${entry.durationMs} ms</small></div>
+          </article>`).join("") : `<div class="empty-tool-log">No Career Buddy tools have run yet. Your first supported-field selection will start the trace.</div>`}
+        </div>
+      </section>
     </div>
     <div class="drawer-safety">${icon("shield", 17)}<p><strong>Student remains in control.</strong> Read and reasoning tools can run automatically. Official plan changes still require explicit approval.</p></div>
   </aside>`;
@@ -1237,6 +1299,14 @@ root.addEventListener("click", (event) => {
       case "explain-current-step":
         explainCurrentStep();
         break;
+      case "open-webmcp-diagnostics":
+        setJourney({ activityOpen: true }, { persist: false });
+        break;
+      case "recheck-webmcp":
+        nativeWebMCPRegistration = await runtime.reregister();
+        window.__PATHWAYOS_WEBMCP_REGISTRATION__ = nativeWebMCPRegistration;
+        scheduleRender();
+        break;
       case "toggle-activity":
         setJourney({ activityOpen: !journey.activityOpen }, { persist: false });
         break;
@@ -1263,10 +1333,33 @@ window.PathwayOSWebMCP = {
   tools: runtime.publicTools,
   execute: (name, input = {}) => runtime.execute(name, input, "career-buddy-console"),
   getState: () => dataStore.getState(),
+  diagnostics: () => runtime.diagnostics(),
+  registration: () => runtime.getRegistrationReport(),
+  getNativeTools: () => runtime.discoverNativeTools(),
+  reregister: () => runtime.reregister(),
 };
+window.__PATHWAYOS_WEBMCP_REGISTRATION__ = nativeWebMCPRegistration;
 
 scheduleRender({ scroll: true, focus: true });
 
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+async function configureServiceWorker() {
+  if (!("serviceWorker" in navigator) || !location.protocol.startsWith("http")) return;
+  const localHost = ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
+  if (localHost) {
+    const wasControlled = Boolean(navigator.serviceWorker.controller);
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((registration) => registration.unregister()));
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter((key) => key.startsWith("pathwayos-")).map((key) => caches.delete(key)));
+    }
+    const reloadKey = "pathwayos-webmcp-local-sw-cleared-v2.3";
+    if (wasControlled && !sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, "1");
+      location.reload();
+    }
+    return;
+  }
+  await navigator.serviceWorker.register("./service-worker.js");
 }
+configureServiceWorker().catch((error) => console.warn("PathwayOS service worker setup skipped", error));

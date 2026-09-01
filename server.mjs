@@ -38,14 +38,20 @@ const server = createServer(async (request, response) => {
     }
     response.writeHead(200, {
       "Content-Type": mime[extname(filePath)] || "application/octet-stream",
-      "Cache-Control": extname(filePath) === ".html" ? "no-cache" : "public, max-age=3600",
+      "Cache-Control": [".html", ".js", ".json"].includes(extname(filePath)) ? "no-store" : "public, max-age=3600",
+      "Origin-Agent-Cluster": "?1",
       "X-Content-Type-Options": "nosniff",
       "Referrer-Policy": "strict-origin-when-cross-origin",
-      "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+      "Permissions-Policy": "tools=(self), camera=(), microphone=(), geolocation=()",
     });
     response.end(content);
   } catch (error) {
-    response.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
+    response.writeHead(500, {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-store, max-age=0",
+      "Origin-Agent-Cluster": "?1",
+      "Permissions-Policy": "tools=(self), camera=(), microphone=(), geolocation=()",
+    });
     response.end(`PathwayOS server error: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
 });

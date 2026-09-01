@@ -1,4 +1,4 @@
-# PathwayOS Career Buddy 2.1 — Option-Driven Demo Script
+# PathwayOS Career Buddy 2.3 — Option-Driven Demo Script
 
 ## Story
 

@@ -1,13 +1,44 @@
-# PathwayOS Career Buddy 2.1 — Selection-First WebMCP Journey
+# PathwayOS Career Buddy 2.3 — Selection-First + Imperative WebMCP
 
 PathwayOS is a continuous student career-planning journey. It does not open with a dashboard full of courses, roles, internships, scholarships, research, and technical tools. The student makes one supported choice at a time, and each decision narrows what appears next.
 
-Version 2.1 addresses two usability problems directly:
+Version 2.3 preserves the scrollable, selection-first journey and makes the browser-native WebMCP implementation explicit and easy to verify in a public repository:
 
-- **The central workspace is vertically scrollable.** On desktop, the conversation header and selection footer remain stable while the decision content scrolls. On smaller screens, the page uses normal touch scrolling.
-- **The primary journey is selection-first.** There is no open-ended career text field, so an unsupported entry such as “singer” cannot silently enter the planning engine.
+- **33 direct imperative registrations** are checked into [`src/site-tools.js`](src/site-tools.js). Every tool is registered with a literal name through `document.modelContext.registerTool({ ... })`.
+- **Top-level page registration** occurs during application startup from [`src/app.js`](src/app.js); the tools are not hidden in an iframe.
+- **Repository validation** is available through `npm run check:webmcp`, which checks direct calls, unique names, schemas, execute handlers, runtime registration, and the MIT license.
+- **The primary journey remains selection-first and scrollable.** There is no open-ended career field, so an unsupported entry such as “singer” cannot silently enter the planning engine.
 
 ![PathwayOS selection-first career areas](mockups/01-selection-first-career-areas.png)
+
+## Native Chrome WebMCP verification
+
+PathwayOS distinguishes its internal career-buddy runtime from Chrome's native WebMCP registry. The header turns green only after `document.modelContext.getTools()` confirms all 33 PathwayOS tools. It no longer reports 33 native tools when the API is missing or registration fails.
+
+The local server and deployment configurations send the headers required by WebMCP:
+
+```http
+Origin-Agent-Cluster: ?1
+Permissions-Policy: tools=(self), camera=(), microphone=(), geolocation=()
+```
+
+For local Chrome testing, enable both flags and fully relaunch Chrome:
+
+```text
+chrome://flags/#enable-webmcp-testing
+chrome://flags/#devtools-webmcp-support
+```
+
+Then open `http://localhost:3000`, DevTools → Application → WebMCP. The app header should say `33 WebMCP tools registered`, and Available Tools should contain 33 entries.
+
+Run this in Console for an exact self-check:
+
+```js
+await window.PathwayOSWebMCP.diagnostics()
+```
+
+On localhost, v2.3 unregisters old PathwayOS service workers and clears their caches once so stale v2.3 JavaScript or document responses cannot hide the corrected registration.
+
 
 ## The supported-choice journey
 
@@ -121,7 +152,21 @@ The runtime exposes 33 structured tools:
 - 25 read/reason tools
 - 8 approval-gated write tools
 
-Native registration uses `document.modelContext.registerTool()` when supported. Ordinary browsers use the exact same definitions and handlers through the included runtime. The student sees a simple explanation such as “I checked your prerequisites”; technical execution appears only after opening **Agent activity**.
+The repository contains one actual, statically visible imperative registration for every tool. Each invocation also forwards the browser-provided cancellation signal to the shared application handler. For example:
+
+```javascript
+await document.modelContext.registerTool({
+  name: "list_career_fields",
+  description: listCareerFields.description,
+  inputSchema: listCareerFields.inputSchema,
+  execute: async (input, options = {}) =>
+    listCareerFields.execute(input, { signal: options.signal }),
+  title: listCareerFields.title,
+  annotations: listCareerFields.annotations,
+}, { signal });
+```
+
+[`src/webmcp.js`](src/webmcp.js) owns the shared definitions and handlers. [`src/site-tools.js`](src/site-tools.js) performs direct browser registration from the top-level application. Ordinary browsers without WebMCP support use the same handlers through the local runtime. Technical execution appears only after opening **Agent activity**.
 
 See [`docs/WEBMCP_TOOLS.md`](docs/WEBMCP_TOOLS.md) for the complete tool catalog.
 
@@ -139,6 +184,7 @@ Open `http://localhost:3000`.
 
 ```bash
 npm test
+npm run check:webmcp
 npm run build
 npm run test:browser
 ```
@@ -147,8 +193,9 @@ npm run test:browser
 
 Current validated results:
 
-- 32 of 32 Node unit and WebMCP contract tests pass.
-- 13 of 13 production-browser checks pass.
+- Node unit, native-readiness, and WebMCP contract tests pass.
+- 13 of 13 production-browser journey checks pass.
+- 33 of 33 direct `document.modelContext.registerTool({ ... })` registrations pass repository and runtime validation.
 - The full 20-field selector and the long academic-route step both scroll in the center workspace.
 - Desktop and 390 × 844 mobile layouts have no horizontal overflow.
 - No console or uncaught page errors were detected.
@@ -158,7 +205,7 @@ Detailed evidence is in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) and [`docs/care
 ## Project structure
 
 ```text
-PathwayOS-Career-Buddy-v2.1/
+PathwayOS-Career-Buddy-v2.3/
 ├── data/
 │   └── pathwayos-career-catalog.json
 ├── src/
@@ -169,11 +216,13 @@ PathwayOS-Career-Buddy-v2.1/
 │   ├── data.js                Curated academic MVP data
 │   ├── engine.js              Prerequisites, plans, gaps, matching, roadmap reasoning
 │   ├── store.js               Student-controlled state and approval queue
-│   ├── webmcp.js              33 structured tool definitions and runtime
+│   ├── webmcp.js              33 shared tool definitions and local runtime
+│   ├── site-tools.js          33 literal document.modelContext.registerTool calls
 │   ├── dom-patch.js           Keyed in-place reconciliation to avoid flicker
 │   └── icons.js
 ├── scripts/
 │   ├── build.mjs
+│   ├── check-webmcp.mjs       Repository and runtime WebMCP compliance check
 │   ├── sync-career-catalog.mjs
 │   └── career-buddy-browser-check.py
 ├── tests/

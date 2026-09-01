@@ -6,6 +6,7 @@ import {
   listCareerFields,
   recommendCareerPaths,
 } from "./career-catalog.js";
+import { registerPathwaySiteTools } from "./site-tools.js";
 import {
   buildPersonalizedPathway,
   checkPrerequisites,
@@ -22,12 +23,15 @@ import {
   simulateDegreePlan,
 } from "./engine.js";
 
-const objectSchema = (properties = {}, required = []) => ({
-  type: "object",
-  properties,
-  required,
-  additionalProperties: false,
-});
+const objectSchema = (properties = {}, required = []) => {
+  const schema = {
+    type: "object",
+    properties,
+    additionalProperties: false,
+  };
+  if (required.length) schema.required = required;
+  return schema;
+};
 
 const stringField = (description, extra = {}) => ({ type: "string", description, ...extra });
 const boolField = (description) => ({ type: "boolean", description });
@@ -44,6 +48,38 @@ const workspaceView = (source, view) => shouldNavigateWorkspace(source) ? { view
 
 function assertNotAborted(signal) {
   if (signal?.aborted) throw new DOMException("Tool execution cancelled", "AbortError");
+}
+
+
+function webMCPError(error) {
+  return {
+    name: error?.name || "Error",
+    message: error instanceof Error ? error.message : String(error),
+  };
+}
+
+function readWebMCPEnvironment() {
+  const doc = typeof document === "undefined" ? null : document;
+  const win = typeof window === "undefined" ? globalThis : window;
+  const policy = doc?.permissionsPolicy || doc?.featurePolicy;
+  let toolsPolicyAllowed = null;
+  try {
+    if (typeof policy?.allowsFeature === "function") toolsPolicyAllowed = policy.allowsFeature("tools");
+  } catch {
+    toolsPolicyAllowed = null;
+  }
+  return {
+    secureContext: typeof win.isSecureContext === "boolean" ? win.isSecureContext : null,
+    originAgentCluster: typeof win.originAgentCluster === "boolean" ? win.originAgentCluster : null,
+    topLevelDocument: typeof win.top === "undefined" || win.top === win.self,
+    modelContextAvailable: Boolean(doc?.modelContext),
+    registerToolType: typeof doc?.modelContext?.registerTool,
+    getToolsType: typeof doc?.modelContext?.getTools,
+    modelContextTestingAvailable: Boolean(win.navigator?.modelContextTesting),
+    toolsPolicyAllowed,
+    origin: win.location?.origin || "",
+    userAgent: win.navigator?.userAgent || "",
+  };
 }
 
 function compactResult(value) {
@@ -502,24 +538,119 @@ export function createWebMCPRuntime(store) {
   };
 
   let controller = null;
+  let lastRegistrationReport = null;
+
+  async function discoverNativeTools() {
+    if (typeof document?.modelContext?.getTools !== "function") {
+      return { supported: false, count: null, names: [], tools: [], error: null };
+    }
+    try {
+      const discovered = await document.modelContext.getTools();
+      const expectedNames = new Set(definitions.map((tool) => tool.name));
+      const tools = discovered
+        .filter((tool) => expectedNames.has(tool.name))
+        .map((tool) => ({
+          name: tool.name,
+          title: tool.title || "",
+          description: tool.description || "",
+          origin: tool.origin || "",
+          annotations: tool.annotations || null,
+        }));
+      return { supported: true, count: tools.length, names: tools.map((tool) => tool.name), tools, error: null };
+    } catch (error) {
+      return { supported: true, count: 0, names: [], tools: [], error: webMCPError(error) };
+    }
+  }
+
   async function register() {
-    const modelContext = document.modelContext;
-    if (!modelContext?.registerTool) {
-      store.setState({ nativeWebMCP: false, registeredToolCount: definitions.length }, { persist: false });
-      return { native: false, count: definitions.length };
+    const expectedCount = definitions.length;
+    const environment = readWebMCPEnvironment();
+    store.setState({
+      nativeWebMCP: false,
+      registeredToolCount: 0,
+      webMCPExpectedToolCount: expectedCount,
+      webMCPStatus: "checking",
+      webMCPFailures: [],
+      webMCPDiscoveredToolNames: [],
+      webMCPEnvironment: environment,
+    }, { persist: false });
+
+    if (typeof document?.modelContext?.registerTool !== "function") {
+      const report = {
+        native: false,
+        status: "api_unavailable",
+        expectedCount,
+        count: 0,
+        registered: [],
+        discovered: [],
+        failures: [{ name: "WebMCP API", error: "document.modelContext.registerTool is unavailable. Enable the WebMCP testing flag and relaunch Chrome." }],
+        environment,
+      };
+      lastRegistrationReport = report;
+      store.setState({
+        nativeWebMCP: false,
+        registeredToolCount: 0,
+        webMCPStatus: report.status,
+        webMCPFailures: report.failures,
+        webMCPEnvironment: environment,
+      }, { persist: false });
+      return report;
     }
+
+    controller?.abort();
     controller = new AbortController();
-    let registered = 0;
-    for (const tool of publicTools) {
-      try {
-        await modelContext.registerTool(tool, { signal: controller.signal });
-        registered += 1;
-      } catch (error) {
-        console.warn(`Could not register WebMCP tool ${tool.name}`, error);
-      }
+    const registration = await registerPathwaySiteTools(publicTools, { signal: controller.signal });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const discovery = await discoverNativeTools();
+    const registrationComplete = registration.count === expectedCount && registration.failures.length === 0;
+    const discoveryComplete = !discovery.supported || discovery.count === expectedCount;
+    const native = registrationComplete && discoveryComplete;
+    const failures = [...registration.failures];
+    if (discovery.error) failures.push({ name: "getTools", error: `${discovery.error.name}: ${discovery.error.message}` });
+    if (discovery.supported && discovery.count !== expectedCount && !discovery.error) {
+      failures.push({ name: "discovery", error: `Chrome discovered ${discovery.count} of ${expectedCount} PathwayOS tools after registration.` });
     }
-    store.setState({ nativeWebMCP: registered > 0, registeredToolCount: registered }, { persist: false });
-    return { native: registered > 0, count: registered };
+    const status = native ? "registered" : registration.count > 0 ? "partial" : "registration_failed";
+    const report = {
+      native,
+      status,
+      expectedCount,
+      count: discovery.supported ? discovery.count : registration.count,
+      registrationCount: registration.count,
+      registered: registration.registered,
+      discovered: discovery.names,
+      failures,
+      environment,
+    };
+    lastRegistrationReport = report;
+    store.setState({
+      nativeWebMCP: native,
+      registeredToolCount: report.count,
+      webMCPExpectedToolCount: expectedCount,
+      webMCPStatus: status,
+      webMCPFailures: failures,
+      webMCPDiscoveredToolNames: discovery.names,
+      webMCPEnvironment: environment,
+    }, { persist: false });
+    return report;
+  }
+
+  async function diagnostics() {
+    const environment = readWebMCPEnvironment();
+    const discovery = await discoverNativeTools();
+    return {
+      environment,
+      expectedCount: definitions.length,
+      registration: lastRegistrationReport,
+      discoveredCount: discovery.count,
+      discoveredNames: discovery.names,
+      discoveryError: discovery.error,
+    };
+  }
+
+  async function reregister() {
+    unregister();
+    return register();
   }
 
   function unregister() {
@@ -527,7 +658,17 @@ export function createWebMCPRuntime(store) {
     controller = null;
   }
 
-  return { definitions, publicTools, execute, register, unregister };
+  return {
+    definitions,
+    publicTools,
+    execute,
+    register,
+    reregister,
+    diagnostics,
+    discoverNativeTools,
+    getRegistrationReport: () => lastRegistrationReport,
+    unregister,
+  };
 }
 
 function queueSave(store, opportunityId, expectedType) {

@@ -1,0 +1,5 @@
+/*
+  Origin-Agent-Cluster: ?1
+  Permissions-Policy: tools=(self), camera=(), microphone=(), geolocation=()
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
