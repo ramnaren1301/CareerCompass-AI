@@ -54,6 +54,6 @@ try {
 } finally {
   if (previousDocument === undefined) delete globalThis.document; else globalThis.document = previousDocument;
 }
-const report = { product: "PathwayOS Career Buddy", version: "2.3.0", status: "PASS", directRegisterToolCalls: calls.length, uniqueLiteralToolNames: new Set(names).size, runtimeRegistrations: registrations.length, nativeDiscoveryCount: registrations.length, originAgentClusterHeader: true, toolsPermissionsPolicy: true, truthfulFallbackCount: true, registeredToolNames: names, topLevelPageRegistration: true, licensePresent: true };
+const report = { product: "CareerCompass AI", version: "3.0.0", status: "PASS", directRegisterToolCalls: calls.length, uniqueLiteralToolNames: new Set(names).size, runtimeRegistrations: registrations.length, nativeDiscoveryCount: registrations.length, originAgentClusterHeader: true, toolsPermissionsPolicy: true, truthfulFallbackCount: true, registeredToolNames: names, topLevelPageRegistration: true, licensePresent: true };
 await writeFile(new URL("../docs/webmcp-registration-results.json", import.meta.url), JSON.stringify(report, null, 2) + "\n");
 console.log(JSON.stringify(report, null, 2));

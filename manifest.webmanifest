@@ -1,7 +1,7 @@
 {
-  "name": "PathwayOS Career Buddy",
-  "short_name": "PathwayOS",
-  "description": "One continuous academic-to-career journey, guided by WebMCP.",
+  "name": "CareerCompass AI",
+  "short_name": "CareerCompass AI",
+  "description": "A guided WebMCP degree-to-career experience that helps students make one relevant decision at a time.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f4f6fb",

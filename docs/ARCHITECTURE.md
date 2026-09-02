@@ -1,8 +1,8 @@
-# PathwayOS 2.3 Architecture
+# CareerCompass AI 3.0 Architecture
 
 ## Design principle
 
-PathwayOS is one stateful conversation, not a set of destination screens. The central product abstraction is a dependency-aware journey state machine.
+CareerCompass AI is one stateful conversation, not a set of destination screens. The central product abstraction is a dependency-aware journey state machine.
 
 ```text
 Student selection
@@ -39,7 +39,7 @@ At tablet and mobile breakpoints, the layout returns to normal document flow so 
 
 ## Journey state machine
 
-`src/buddy-journey.js` defines the ordered steps:
+`src/careercompass-journey.js` defines the ordered steps:
 
 ```text
 direction → role → priority → route → semester
@@ -143,7 +143,7 @@ Funding is optional and follows the same rule. Generic directories are not displ
 
 - native imperative registration when available
 - the built-in browser runtime
-- the career-buddy orchestration
+- the careercompass-ai orchestration
 - unit and browser tests
 
 The visible journey calls only the tools needed by the selected branch. Technical execution history is stored in `journey.toolLog` and rendered only in the secondary activity drawer.
@@ -155,7 +155,7 @@ The WebMCP tools are divided into:
 - 25 read/reason tools
 - 8 approval-gated writes
 
-Write handlers create pending approvals and return `awaiting_student_confirmation`. They do not persist the requested change. The career buddy places the degree-plan approval inline at the exact point where the decision is needed.
+Write handlers create pending approvals and return `awaiting_student_confirmation`. They do not persist the requested change. CareerCompass AI places the degree-plan approval inline at the exact point where the decision is needed.
 
 ## Data architecture
 
@@ -173,7 +173,7 @@ Student + academic demo data
                  ├── engine.js
                  │
                  ▼
-          buddy-journey.js
+          careercompass-journey.js
                  │
                  ▼
       one progressive conversation

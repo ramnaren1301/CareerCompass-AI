@@ -1,5 +1,5 @@
 /**
- * Imperative WebMCP registration for PathwayOS.
+ * Imperative WebMCP registration for CareerCompass AI.
  *
  * Keep these direct calls in checked-in source. They are the live browser
  * integration and make the repository implementation easy to inspect.
@@ -8,7 +8,7 @@
 
 function requireTool(toolMap, name) {
   const tool = toolMap.get(name);
-  if (!tool) throw new Error(`Missing PathwayOS WebMCP definition: ${name}`);
+  if (!tool) throw new Error(`Missing CareerCompass AI WebMCP definition: ${name}`);
   return tool;
 }
 
@@ -426,9 +426,9 @@ export async function registerPathwaySiteTools(publicTools, { signal } = {}) {
   );
 
   if (failures.length) {
-    console.error(`[PathwayOS WebMCP] ${failures.length} of ${toolMap.size} tools failed to register.`, failures);
+    console.error(`[CareerCompass AI WebMCP] ${failures.length} of ${toolMap.size} tools failed to register.`, failures);
   } else {
-    console.info(`[PathwayOS WebMCP] Registered ${registered.length} tools with document.modelContext.`);
+    console.info(`[CareerCompass AI WebMCP] Registered ${registered.length} tools with document.modelContext.`);
   }
   return { count: registered.length, registered, failures };
 }

@@ -1,4 +1,4 @@
-# PathwayOS 2.0 Release Notes — Career Buddy Redesign
+# CareerCompass AI 2.0 Release Notes — CareerCompass AI Redesign
 
 ## Why this is a major release
 

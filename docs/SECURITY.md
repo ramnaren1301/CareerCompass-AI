@@ -1,6 +1,6 @@
 # Safety, Privacy, and Human Control
 
-PathwayOS treats the student as the final decision-maker.
+CareerCompass AI treats the student as the final decision-maker.
 
 ## Read versus write behavior
 
@@ -25,7 +25,7 @@ readOnlyHint: true
 untrustedContentHint: true
 ```
 
-PathwayOS treats catalog text and links as data, not executable instructions:
+CareerCompass AI treats catalog text and links as data, not executable instructions:
 
 - all rendered text and attributes are escaped
 - external links open with `rel="noreferrer"`

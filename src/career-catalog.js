@@ -226,7 +226,7 @@ function linkMetrics() {
   return { totalEntries: entries.length, verifiedLinks, linksNeedingVerification: entries.length - verifiedLinks };
 }
 
-export async function loadCareerCatalog(url = new URL("../data/pathwayos-career-catalog.json", import.meta.url)) {
+export async function loadCareerCatalog(url = new URL("../data/careercompass-career-catalog.json", import.meta.url)) {
   if (typeof fetch !== "function") return getCareerCatalogStatus();
   try {
     const response = await fetch(url, { cache: "no-store" });

@@ -224,7 +224,7 @@ export function getCareerDegreeAlignment(careerGoal, profile = student) {
     return {
       level: "pivot",
       label: "Program change may be needed",
-      message: `${field.topic} usually requires a different engineering major. PathwayOS will show transferable courses, but an academic-advisor review is essential.`,
+      message: `${field.topic} usually requires a different engineering major. CareerCompass AI will show transferable courses, but an academic-advisor review is essential.`,
       typicalDegrees: degrees,
     };
   }

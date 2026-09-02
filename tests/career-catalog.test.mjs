@@ -14,7 +14,7 @@ import {
 
 
 test("generated fallback remains identical to the attached runtime JSON", () => {
-  const external = JSON.parse(readFileSync(new URL("../data/pathwayos-career-catalog.json", import.meta.url), "utf8"));
+  const external = JSON.parse(readFileSync(new URL("../data/careercompass-career-catalog.json", import.meta.url), "utf8"));
   assert.deepEqual(careerCatalogFallback, external);
 });
 

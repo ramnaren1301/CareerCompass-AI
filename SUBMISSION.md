@@ -1,4 +1,4 @@
-# PathwayOS 2.3 Submission Checklist
+# CareerCompass AI 3.0 Submission Checklist
 
 ## Repository
 
@@ -13,7 +13,7 @@
 
 ## Product
 
-- [x] One continuous, option-driven Career Buddy journey
+- [x] One continuous, option-driven CareerCompass AI journey
 - [x] Six catalog-backed starting areas and all 20 supported fields
 - [x] No unsupported free-text career path enters planning
 - [x] Scrollable desktop workspace and normal mobile scrolling
@@ -22,7 +22,18 @@
 
 ## Validation
 
-- [x] 34 Node tests
+- [x] 38 Node tests
 - [x] 33 direct registrations
 - [x] 13 browser journey checks
 - [x] No console or uncaught browser errors
+
+
+## Challenge video
+
+- [x] Exactly three minutes at 1920 × 1080
+- [x] Ten conversational sections; every section begins with a question
+- [x] Simple student-first narration and burned captions
+- [x] Real CareerCompass AI screens and direct WebMCP registration source
+- [x] Human approval and agent-control boundary explained
+- [x] Microsoft Andrew SSML and one-command Azure render scripts included
+- [x] Local male preview clearly labeled as not the Andrew render

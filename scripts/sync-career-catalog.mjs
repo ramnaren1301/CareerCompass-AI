@@ -3,7 +3,7 @@ import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 
 export async function syncCareerCatalog({ root = resolve(".") } = {}) {
-  const sourcePath = resolve(root, "data/pathwayos-career-catalog.json");
+  const sourcePath = resolve(root, "data/careercompass-career-catalog.json");
   const outputPath = resolve(root, "src/career-catalog-data.js");
   const raw = await readFile(sourcePath, "utf8");
   const catalog = JSON.parse(raw);
@@ -16,7 +16,7 @@ export async function syncCareerCatalog({ root = resolve(".") } = {}) {
   if (invalidField) throw new Error("Every career catalog field must include a topic and career_paths array.");
 
   const moduleSource = [
-    "// Generated from data/pathwayos-career-catalog.json. Do not edit manually.",
+    "// Generated from data/careercompass-career-catalog.json. Do not edit manually.",
     `export const careerCatalogFallback = ${JSON.stringify(catalog, null, 2)};`,
     "",
   ].join("\n");

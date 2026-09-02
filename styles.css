@@ -91,7 +91,7 @@ svg.icon {
 }
 
 .app-shell,
-.buddy-app {
+.compass-app {
   width: 100%;
   height: 100dvh;
   min-height: 0;
@@ -126,7 +126,7 @@ svg.icon {
   box-shadow: var(--shadow-md);
 }
 
-.buddy-app {
+.compass-app {
   display: grid;
   grid-template-rows: var(--header-h) minmax(0, 1fr);
   background:
@@ -135,7 +135,7 @@ svg.icon {
     #f3f5fa;
 }
 
-.buddy-header {
+.compass-header {
   position: relative;
   z-index: 20;
   min-width: 0;
@@ -280,7 +280,7 @@ svg.icon {
   background: var(--red-soft);
 }
 
-.buddy-layout {
+.compass-layout {
   min-width: 0;
   min-height: 0;
   height: 100%;
@@ -514,7 +514,7 @@ svg.icon {
   background: rgba(255, 255, 255, 0.94);
 }
 
-.buddy-avatar {
+.compass-avatar {
   width: 38px;
   height: 38px;
   display: grid;
@@ -852,7 +852,7 @@ svg.icon {
   background: var(--blue-soft);
 }
 
-.buddy-note,
+.compass-note,
 .plan-why {
   display: flex;
   align-items: flex-start;
@@ -1600,7 +1600,7 @@ svg.icon {
   font-size: 10px;
 }
 
-.buddy-composer {
+.compass-composer {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 44px;
   align-items: center;
@@ -1647,7 +1647,7 @@ svg.icon {
   color: var(--ink-faint);
 }
 
-.buddy-composer > button {
+.compass-composer > button {
   width: 44px;
   height: 44px;
   display: grid;
@@ -2206,11 +2206,11 @@ svg.icon {
 }
 
 @media (max-width: 1340px) {
-  .buddy-layout {
+  .compass-layout {
     grid-template-columns: 250px minmax(500px, 1fr) 280px;
   }
 
-  .buddy-header {
+  .compass-header {
     grid-template-columns: 220px minmax(260px, 1fr) auto;
   }
 
@@ -2239,22 +2239,22 @@ svg.icon {
   }
 
   .app-shell,
-  .buddy-app {
+  .compass-app {
     height: auto;
     min-height: 100dvh;
     overflow: visible;
   }
 
-  .buddy-app {
+  .compass-app {
     grid-template-rows: auto auto;
   }
 
-  .buddy-layout {
+  .compass-layout {
     height: auto;
     overflow: visible;
   }
 
-  .buddy-header {
+  .compass-header {
     position: sticky;
     top: 0;
     min-height: 70px;
@@ -2266,7 +2266,7 @@ svg.icon {
     display: none;
   }
 
-  .buddy-layout {
+  .compass-layout {
     grid-template-columns: 230px minmax(0, 1fr);
     grid-template-rows: minmax(760px, calc(100vh - 102px)) auto;
   }
@@ -2292,7 +2292,7 @@ svg.icon {
     --header-h: auto;
   }
 
-  .buddy-header {
+  .compass-header {
     grid-template-columns: 1fr auto;
     gap: 10px;
   }
@@ -2311,7 +2311,7 @@ svg.icon {
     display: none;
   }
 
-  .buddy-layout {
+  .compass-layout {
     display: block;
     padding: 10px;
   }
@@ -2472,7 +2472,7 @@ svg.icon {
 }
 
 @media (max-width: 520px) {
-  .buddy-header {
+  .compass-header {
     padding: 9px 10px;
   }
 
@@ -2497,7 +2497,7 @@ svg.icon {
     padding: 0 12px;
   }
 
-  .buddy-avatar {
+  .compass-avatar {
     width: 34px;
     height: 34px;
   }
@@ -2589,7 +2589,7 @@ svg.icon {
     justify-self: start;
   }
 
-  .buddy-composer {
+  .compass-composer {
     padding: 12px;
   }
 

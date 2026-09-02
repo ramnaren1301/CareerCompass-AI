@@ -1,10 +1,10 @@
-const CACHE = "pathwayos-v9-native-webmcp-diagnostics";
+const CACHE = "careercompass-ai-v3-webmcp";
 const ASSETS = [
   "/", "/index.html", "/styles.css", "/service-worker.js",
   "/src/app.js", "/src/data.js", "/src/engine.js", "/src/store.js",
-  "/src/webmcp.js", "/src/site-tools.js", "/src/buddy-journey.js", "/src/icons.js", "/src/dom-patch.js",
+  "/src/webmcp.js", "/src/site-tools.js", "/src/careercompass-journey.js", "/src/icons.js", "/src/dom-patch.js",
   "/src/career-catalog.js", "/src/career-catalog-data.js",
-  "/data/pathwayos-career-catalog.json", "/public/icon.svg",
+  "/data/careercompass-career-catalog.json", "/public/icon.svg",
 ];
 
 self.addEventListener("install", (event) => {

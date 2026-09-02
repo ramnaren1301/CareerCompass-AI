@@ -25,10 +25,10 @@ import {
   skillChoices,
   supportedCareerCounts,
   workloadOptions,
-} from "./buddy-journey.js";
+} from "./careercompass-journey.js";
 
 const root = document.getElementById("app");
-const JOURNEY_STORAGE_KEY = "pathwayos-career-buddy-v2.3-selection-first";
+const JOURNEY_STORAGE_KEY = "careercompass-ai-journey-v3.0-selection-first";
 const catalogStatus = await loadCareerCatalog();
 const dataStore = createStore();
 dataStore.setState({ careerCatalogStatus: catalogStatus }, { persist: false });
@@ -36,7 +36,7 @@ const runtime = createWebMCPRuntime(dataStore);
 let nativeWebMCPRegistration = await runtime.register();
 if (!nativeWebMCPRegistration.native) {
   const log = nativeWebMCPRegistration.status === "api_unavailable" ? console.warn : console.error;
-  log("[PathwayOS WebMCP] Native registration is not active.", nativeWebMCPRegistration);
+  log("[CareerCompass AI WebMCP] Native registration is not active.", nativeWebMCPRegistration);
 }
 
 let journey = loadJourney();
@@ -142,7 +142,7 @@ async function executeTool(name, input = {}, label = name) {
   const started = performance.now();
   try {
     const [output] = await Promise.all([
-      runtime.execute(name, input, "career-buddy"),
+      runtime.execute(name, input, "careercompass-ai"),
       new Promise((resolve) => setTimeout(resolve, 180)),
     ]);
     journey = {
@@ -169,7 +169,7 @@ async function executeTool(name, input = {}, label = name) {
       ...journey,
       busy: false,
       activeTool: "",
-      error: error instanceof Error ? error.message : "The career-buddy action could not be completed.",
+      error: error instanceof Error ? error.message : "The careercompass-ai action could not be completed.",
       toolLog: [
         {
           id: makeId("tool"),
@@ -226,9 +226,9 @@ function stepNumber(stepId) {
 function renderApp() {
   const step = currentStepMeta();
   const progress = Math.round((currentStepIndex() / (JOURNEY_STEPS.length - 1)) * 100);
-  return `<div class="buddy-app" data-key="buddy-app">
+  return `<div class="compass-app" data-key="compass-app">
     ${renderHeader(progress, step)}
-    <main class="buddy-layout">
+    <main class="compass-layout">
       ${renderJourneyTrail()}
       ${renderConversation()}
       ${renderFocusPanel()}
@@ -257,10 +257,10 @@ function renderNativeWebMCPStatus() {
 }
 
 function renderHeader(progress, step) {
-  return `<header class="buddy-header" data-key="buddy-header">
+  return `<header class="compass-header" data-key="compass-header">
     <div class="brand-lockup">
       <span class="brand-mark">${icon("route", 22)}</span>
-      <div><strong>PathwayOS</strong><span>Career Buddy</span></div>
+      <div><strong>CareerCompass AI</strong><span>Degree-to-career guide</span></div>
     </div>
     <div class="header-progress" aria-label="Journey progress">
       <div><span>Step ${stepNumber(step.id)} of ${JOURNEY_STEPS.length}</span><strong>${escapeHtml(step.label)}</strong></div>
@@ -315,11 +315,11 @@ function renderJourneyTrail() {
 function renderConversation() {
   return `<section class="conversation-workspace" data-key="conversation-workspace">
     <div class="conversation-titlebar">
-      <div class="buddy-avatar">${icon("sparkles", 20)}</div>
-      <div><strong>Pathway Career Buddy</strong><span>${journey.busy ? escapeHtml(journey.activeTool) : "Guiding one supported selection at a time"}</span></div>
+      <div class="compass-avatar">${icon("sparkles", 20)}</div>
+      <div><strong>CareerCompass AI</strong><span>${journey.busy ? escapeHtml(journey.activeTool) : "Guiding one supported selection at a time"}</span></div>
       <span class="live-indicator"><i></i>${journey.busy ? "Working" : "Ready"}</span>
     </div>
-    <div class="conversation-scroll" id="conversation-scroll" data-key="conversation-scroll" tabindex="0" aria-label="Career Buddy conversation and current decision. Scroll vertically inside this panel.">
+    <div class="conversation-scroll" id="conversation-scroll" data-key="conversation-scroll" tabindex="0" aria-label="CareerCompass AI conversation and current decision. Scroll vertically inside this panel.">
       <div class="message-stream">
         ${journey.messages.map(renderMessage).join("")}
         ${renderActiveStep()}
@@ -378,7 +378,7 @@ function renderDirectionStep() {
   let text = "Start with one supported area. I’ll then show only the career fields and roles available inside your selection.";
   let body = `<div class="supported-catalog-banner">
     <span class="supported-catalog-icon">${icon("check", 17)}</span>
-    <div><strong>Choose from ${counts.fields} supported career fields</strong><p>${counts.roles} roles are available in the attached PathwayOS catalog. Open-ended career entry is intentionally disabled.</p></div>
+    <div><strong>Choose from ${counts.fields} supported career fields</strong><p>${counts.roles} roles are available in the attached CareerCompass AI catalog. Open-ended career entry is intentionally disabled.</p></div>
   </div>
   <div class="option-grid career-group-options">
     ${groups.map((group) => `<button class="choice-card career-group-choice" data-action="choose-career-group" data-group="${escapeAttr(group.id)}">
@@ -413,7 +413,7 @@ function renderDirectionStep() {
   if (mode === "all") {
     const allGroups = allSupportedCareerFields();
     title = `All ${counts.fields} career fields supported in this version`;
-    text = "Choose a field from the catalog. PathwayOS will not invent a route for careers that are not represented in the data.";
+    text = "Choose a field from the catalog. CareerCompass AI will not invent a route for careers that are not represented in the data.";
     body = `<div class="supported-catalog-banner compact">
       <span class="supported-catalog-icon">${icon("shield", 17)}</span>
       <div><strong>Catalog-constrained selection</strong><p>Every option below exists in the attached JSON and has defined roles.</p></div>
@@ -540,7 +540,7 @@ function renderSemesterStep() {
     </div>` : ""}
     ${approval ? `<div class="inline-approval" data-key="plan-approval">
       <div class="approval-icon">${icon("lock", 18)}</div>
-      <div><span>Student confirmation required</span><strong>${routeNeedsReview ? "Save this as my working plan while the route is reviewed?" : "Use this as my official working plan?"}</strong><p>${routeNeedsReview ? "This keeps the semester actionable without treating the program decision as final." : "PathwayOS has prepared the change but has not applied it."}</p></div>
+      <div><span>Student confirmation required</span><strong>${routeNeedsReview ? "Save this as my working plan while the route is reviewed?" : "Use this as my official working plan?"}</strong><p>${routeNeedsReview ? "This keeps the semester actionable without treating the program decision as final." : "CareerCompass AI has prepared the change but has not applied it."}</p></div>
       <div class="approval-actions"><button class="button secondary" data-action="adjust-plan">Adjust</button><button class="button primary" data-action="approve-plan">Approve plan</button></div>
     </div>` : approved ? `<div class="approved-strip">${icon("check", 16)} Plan approved. We can now choose one skill to build first.</div>` : `<button class="button primary wide" data-action="propose-plan" ${journey.busy || !term ? "disabled" : ""}>${icon("lock", 17)} ${routeNeedsReview ? "Save this working next-semester plan" : "Use this next-semester plan"}</button>`}`,
   });
@@ -620,7 +620,7 @@ function renderExperienceStep() {
     ${selected ? `<div class="selected-opportunity-detail">
       <div><span>Why it fits now</span><p>${escapeHtml(selected.note || `It creates a relevant proof point for ${journey.selectedRole}.`)}</p></div>
       <div><span>Your preparation</span><p>Use ${escapeHtml(journey.selectedSkill)} and the approved next-semester sequence as the evidence behind your application or outreach.</p></div>
-      ${selected.url ? `<a href="${escapeAttr(selected.url)}" target="_blank" rel="noreferrer">Review the supplied source ${icon("external", 14)}</a>` : `<small>PathwayOS will keep this as a target, but the listing details must be verified before action.</small>`}
+      ${selected.url ? `<a href="${escapeAttr(selected.url)}" target="_blank" rel="noreferrer">Review the supplied source ${icon("external", 14)}</a>` : `<small>CareerCompass AI will keep this as a target, but the listing details must be verified before action.</small>`}
     </div>
     <button class="button primary wide" data-action="confirm-experience">Add this to my pathway ${icon("arrow", 16)}</button>` : ""}
     <button class="text-action" data-action="change-experience-type">Choose a different kind of experience</button>`,
@@ -737,7 +737,7 @@ function renderFocusPanel() {
   const focus = (() => {
     switch (journey.currentStep) {
       case "direction":
-        return { label: "Current focus", title: "Choose a supported career direction", text: "Start with one of six areas. PathwayOS will then reveal only its available fields and roles.", icon: "compass" };
+        return { label: "Current focus", title: "Choose a supported career direction", text: "Start with one of six areas. CareerCompass AI will then reveal only its available fields and roles.", icon: "compass" };
       case "role":
         return { label: journey.selectedTopic, title: "Choose the work, not just the field", text: context.promise, icon: "target" };
       case "priority":
@@ -755,7 +755,7 @@ function renderFocusPanel() {
       case "roadmap":
         return { label: "Pathway ready", title: journey.selectedRole, text: `Your next sequence is ${term?.label || "next semester"} → ${journey.selectedSkill} → ${journey.selectedExperience?.title || "career proof"}.`, icon: "route" };
       default:
-        return { label: "Career Buddy", title: "One decision at a time", text: "", icon: "sparkles" };
+        return { label: "CareerCompass AI", title: "One decision at a time", text: "", icon: "sparkles" };
     }
   })();
 
@@ -790,7 +790,7 @@ function renderFocusPanel() {
       <strong>${escapeHtml(nextAction)}</strong>
       <p>I will not unlock the next part until this decision is complete.</p>
     </div>
-    <button class="activity-link" data-action="toggle-activity">${icon("activity", 16)} See how the buddy used WebMCP <span>${journey.toolLog.length}</span></button>
+    <button class="activity-link" data-action="toggle-activity">${icon("activity", 16)} See how CareerCompass AI used WebMCP <span>${journey.toolLog.length}</span></button>
   </aside>`;
 }
 
@@ -808,7 +808,7 @@ function renderNativeDiagnostics() {
       <div><span>Chrome-native WebMCP</span><h3>${ready ? `${count} tools discoverable` : `${count} of ${expected} tools discoverable`}</h3></div>
       <button data-action="recheck-webmcp" class="native-recheck">${icon("refresh", 14)} Recheck</button>
     </div>
-    <p>${ready ? "Chrome confirmed the registered PathwayOS tools through document.modelContext.getTools()." : "The Career Buddy can still use its local handlers, but Chrome has not confirmed the native tool registry."}</p>
+    <p>${ready ? "Chrome confirmed the registered CareerCompass AI tools through document.modelContext.getTools()." : "CareerCompass AI can still use its local handlers, but Chrome has not confirmed the native tool registry."}</p>
     <div class="native-diagnostic-grid">
       ${row("Secure context", environment.secureContext ?? "Unknown", environment.secureContext === true)}
       ${row("Origin-isolated", environment.originAgentCluster ?? "Unknown", environment.originAgentCluster === true)}
@@ -821,7 +821,7 @@ function renderNativeDiagnostics() {
     ${ready ? "" : `<div class="native-setup-steps"><strong>Required local setup</strong><ol>
       <li>Enable <code>chrome://flags/#enable-webmcp-testing</code> and fully relaunch Chrome.</li>
       <li>Close all existing <code>localhost:3000</code> tabs and open a completely new tab.</li>
-      <li>Keep this app running with <code>npm run dev</code>; v2.3 sends <code>Origin-Agent-Cluster: ?1</code>.</li>
+      <li>Keep this app running with <code>npm run dev</code>; v3.0 sends <code>Origin-Agent-Cluster: ?1</code>.</li>
       <li>Open Application → WebMCP. The Available Tools section should show ${expected} entries.</li>
     </ol></div>`}
   </section>`;
@@ -830,18 +830,18 @@ function renderNativeDiagnostics() {
 function renderActivityDrawer() {
   if (!journey.activityOpen) return "";
   return `<div class="drawer-backdrop" data-action="toggle-activity" data-key="drawer-backdrop"></div>
-  <aside class="activity-drawer" data-key="activity-drawer" aria-label="Career buddy tool activity">
+  <aside class="activity-drawer" data-key="activity-drawer" aria-label="CareerCompass AI tool activity">
     <div class="drawer-header"><div><span>Behind the conversation</span><h2>WebMCP activity</h2></div><button data-action="toggle-activity" aria-label="Close activity">${icon("x", 19)}</button></div>
-    <p class="drawer-intro">Chrome-native registration is shown separately from PathwayOS local tool calls. A local tool call does not mean Chrome registered the tool.</p>
+    <p class="drawer-intro">Chrome-native registration is shown separately from CareerCompass AI local tool calls. A local tool call does not mean Chrome registered the tool.</p>
     <div class="drawer-scroll-content">
       ${renderNativeDiagnostics()}
       <section class="local-tool-card">
-        <div class="local-tool-heading"><span>Career Buddy calls</span><strong>${journey.toolLog.length}</strong></div>
+        <div class="local-tool-heading"><span>CareerCompass AI calls</span><strong>${journey.toolLog.length}</strong></div>
         <div class="tool-log">
           ${journey.toolLog.length ? journey.toolLog.map((entry) => `<article class="tool-log-row ${entry.status}" data-key="${entry.id}">
             <span>${icon(entry.status === "completed" ? "check" : "info", 15)}</span>
             <div><strong>${escapeHtml(entry.name)}</strong><small>${escapeHtml(entry.label)} · ${entry.durationMs} ms</small></div>
-          </article>`).join("") : `<div class="empty-tool-log">No Career Buddy tools have run yet. Your first supported-field selection will start the trace.</div>`}
+          </article>`).join("") : `<div class="empty-tool-log">No CareerCompass AI tools have run yet. Your first supported-field selection will start the trace.</div>`}
         </div>
       </section>
     </div>
@@ -889,7 +889,7 @@ function backToCareerGroups() {
 async function chooseField(topic, role) {
   const detail = exploreCareerPath({ topic, role });
   if (detail.status !== "ok" || detail.topic !== topic) {
-    setJourney({ error: "That field is not supported by the current PathwayOS catalog." }, { scroll: true });
+    setJourney({ error: "That field is not supported by the current CareerCompass AI catalog." }, { scroll: true });
     return;
   }
   const suggestedRole = detail.careerPaths.includes(role) ? role : detail.careerPaths[0] || "";
@@ -1199,7 +1199,7 @@ function explainCurrentStep() {
       ? "These six directions cover all 20 career fields in the attached catalog. Choose the closest direction first so you see only the fields relevant to that area."
       : journey.directionMode === "fields"
         ? `These are the only supported fields inside ${group?.title || "your selected direction"}. Selecting one prevents unrelated careers from entering the pathway.`
-        : "This is the full supported catalog. Careers outside these 20 fields are not accepted by this MVP because PathwayOS does not have structured data for them.",
+        : "This is the full supported catalog. Careers outside these 20 fields are not accepted by this MVP because CareerCompass AI does not have structured data for them.",
     role: `These are the roles defined for ${journey.selectedTopic}. The role you choose becomes the anchor for courses, skill gaps, and opportunities.`,
     priority: "The first priority changes the order of later recommendations. Internship, research, portfolio, and graduation-first pathways should not be identical.",
     route: "These route options reflect how closely your current degree aligns with the selected career, instead of assuming every degree is a direct fit.",
@@ -1304,7 +1304,7 @@ root.addEventListener("click", (event) => {
         break;
       case "recheck-webmcp":
         nativeWebMCPRegistration = await runtime.reregister();
-        window.__PATHWAYOS_WEBMCP_REGISTRATION__ = nativeWebMCPRegistration;
+        window.__CAREERCOMPASS_AI_WEBMCP_REGISTRATION__ = nativeWebMCPRegistration;
         scheduleRender();
         break;
       case "toggle-activity":
@@ -1314,31 +1314,31 @@ root.addEventListener("click", (event) => {
         break;
     }
   };
-  run().catch((error) => console.error("PathwayOS career buddy action failed", error));
+  run().catch((error) => console.error("CareerCompass AI action failed", error));
 });
 
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && journey.activityOpen) setJourney({ activityOpen: false }, { persist: false });
 });
 
-window.PathwayOSCareerBuddy = {
+window.CareerCompassAI = {
   getState: () => structuredClone(journey),
   getDataState: () => structuredClone(dataStore.getState()),
   tools: runtime.definitions.map(({ name, title, description, annotations }) => ({ name, title, description, annotations })),
-  executeTool: (name, input = {}) => runtime.execute(name, input, "career-buddy-console"),
+  executeTool: (name, input = {}) => runtime.execute(name, input, "careercompass-ai-console"),
   startOver,
   goToStep,
 };
-window.PathwayOSWebMCP = {
+window.CareerCompassAIWebMCP = {
   tools: runtime.publicTools,
-  execute: (name, input = {}) => runtime.execute(name, input, "career-buddy-console"),
+  execute: (name, input = {}) => runtime.execute(name, input, "careercompass-ai-console"),
   getState: () => dataStore.getState(),
   diagnostics: () => runtime.diagnostics(),
   registration: () => runtime.getRegistrationReport(),
   getNativeTools: () => runtime.discoverNativeTools(),
   reregister: () => runtime.reregister(),
 };
-window.__PATHWAYOS_WEBMCP_REGISTRATION__ = nativeWebMCPRegistration;
+window.__CAREERCOMPASS_AI_WEBMCP_REGISTRATION__ = nativeWebMCPRegistration;
 
 scheduleRender({ scroll: true, focus: true });
 
@@ -1351,9 +1351,9 @@ async function configureServiceWorker() {
     await Promise.all(registrations.map((registration) => registration.unregister()));
     if ("caches" in window) {
       const keys = await caches.keys();
-      await Promise.all(keys.filter((key) => key.startsWith("pathwayos-")).map((key) => caches.delete(key)));
+      await Promise.all(keys.filter((key) => key.startsWith("careercompass-ai-")).map((key) => caches.delete(key)));
     }
-    const reloadKey = "pathwayos-webmcp-local-sw-cleared-v2.3";
+    const reloadKey = "careercompass-ai-webmcp-local-sw-cleared-v3.0";
     if (wasControlled && !sessionStorage.getItem(reloadKey)) {
       sessionStorage.setItem(reloadKey, "1");
       location.reload();
@@ -1362,4 +1362,4 @@ async function configureServiceWorker() {
   }
   await navigator.serviceWorker.register("./service-worker.js");
 }
-configureServiceWorker().catch((error) => console.warn("PathwayOS service worker setup skipped", error));
+configureServiceWorker().catch((error) => console.warn("CareerCompass AI service worker setup skipped", error));
