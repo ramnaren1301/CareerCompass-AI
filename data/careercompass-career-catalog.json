@@ -1,5 +1,4 @@
-// Generated from data/careercompass-career-catalog.json. Do not edit manually.
-export const careerCatalogFallback = {
+{
   "_meta": {
     "generated_for": "CareerCompass AI WebMCP explore_career_path tool",
     "sourcing": "hand-curated from public, non-gated sources; not scraped",
@@ -1488,4 +1487,4 @@ export const careerCatalogFallback = {
       "research_contacts": []
     }
   ]
-};
+}

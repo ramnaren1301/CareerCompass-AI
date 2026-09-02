@@ -1,19 +1,19 @@
-# PathwayOS Career Buddy 2.3 — Selection-First + Imperative WebMCP
+# CareerCompass AI — Selection-First + Imperative WebMCP
 
-PathwayOS is a continuous student career-planning journey. It does not open with a dashboard full of courses, roles, internships, scholarships, research, and technical tools. The student makes one supported choice at a time, and each decision narrows what appears next.
+CareerCompass AI is a continuous student career-planning journey. It does not open with a dashboard full of courses, roles, internships, scholarships, research, and technical tools. The student makes one supported choice at a time, and each decision narrows what appears next.
 
-Version 2.3 preserves the scrollable, selection-first journey and makes the browser-native WebMCP implementation explicit and easy to verify in a public repository:
+Version 3.0 preserves the scrollable, selection-first journey and makes the browser-native WebMCP implementation explicit and easy to verify in a public repository:
 
 - **33 direct imperative registrations** are checked into [`src/site-tools.js`](src/site-tools.js). Every tool is registered with a literal name through `document.modelContext.registerTool({ ... })`.
 - **Top-level page registration** occurs during application startup from [`src/app.js`](src/app.js); the tools are not hidden in an iframe.
 - **Repository validation** is available through `npm run check:webmcp`, which checks direct calls, unique names, schemas, execute handlers, runtime registration, and the MIT license.
 - **The primary journey remains selection-first and scrollable.** There is no open-ended career field, so an unsupported entry such as “singer” cannot silently enter the planning engine.
 
-![PathwayOS selection-first career areas](mockups/01-selection-first-career-areas.png)
+![CareerCompass AI selection-first career areas](mockups/01-selection-first-career-areas.png)
 
 ## Native Chrome WebMCP verification
 
-PathwayOS distinguishes its internal career-buddy runtime from Chrome's native WebMCP registry. The header turns green only after `document.modelContext.getTools()` confirms all 33 PathwayOS tools. It no longer reports 33 native tools when the API is missing or registration fails.
+CareerCompass AI distinguishes its internal careercompass-ai runtime from Chrome's native WebMCP registry. The header turns green only after `document.modelContext.getTools()` confirms all 33 CareerCompass AI tools. It no longer reports 33 native tools when the API is missing or registration fails.
 
 The local server and deployment configurations send the headers required by WebMCP:
 
@@ -34,10 +34,10 @@ Then open `http://localhost:3000`, DevTools → Application → WebMCP. The app 
 Run this in Console for an exact self-check:
 
 ```js
-await window.PathwayOSWebMCP.diagnostics()
+await window.CareerCompassAIWebMCP.diagnostics()
 ```
 
-On localhost, v2.3 unregisters old PathwayOS service workers and clears their caches once so stale v2.3 JavaScript or document responses cannot hide the corrected registration.
+On localhost, v3.0 unregisters old CareerCompass AI service workers and clears their caches once so stale earlier JavaScript or document responses cannot hide the corrected registration.
 
 
 ## The supported-choice journey
@@ -134,13 +134,13 @@ This is not a visual wizard over independent pages.
 
 Read and reasoning tools may run behind the journey. Consequential changes remain approval-gated.
 
-The next-semester plan is proposed inline. PathwayOS does not apply it until the student selects **Approve plan**. The same WebMCP layer retains approval-gated contracts for adding courses, saving opportunities, expressing research interest, and updating application status.
+The next-semester plan is proposed inline. CareerCompass AI does not apply it until the student selects **Approve plan**. The same WebMCP layer retains approval-gated contracts for adding courses, saving opportunities, expressing research interest, and updating application status.
 
 ## Data sources
 
-PathwayOS uses two transparent MVP data sources:
+CareerCompass AI uses two transparent MVP data sources:
 
-- `data/pathwayos-career-catalog.json` — the supplied catalog with 20 fields, 54 roles, learning paths, scholarships, internships, universities, and research contacts.
+- `data/careercompass-career-catalog.json` — the supplied catalog with 20 fields, 54 roles, learning paths, scholarships, internships, universities, and research contacts.
 - `src/data.js` — curated demonstration student, degree, course, prerequisite, and detailed opportunity data used by the planning engine.
 
 The catalog's `url: null` values remain unverified and are not replaced with invented links. The UI labels those records for verification.
@@ -169,6 +169,15 @@ await document.modelContext.registerTool({
 [`src/webmcp.js`](src/webmcp.js) owns the shared definitions and handlers. [`src/site-tools.js`](src/site-tools.js) performs direct browser registration from the top-level application. Ordinary browsers without WebMCP support use the same handlers through the local runtime. Technical execution appears only after opening **Agent activity**.
 
 See [`docs/WEBMCP_TOOLS.md`](docs/WEBMCP_TOOLS.md) for the complete tool catalog.
+
+
+## Three-minute WebMCP Challenge video
+
+The repository includes the complete question-led narration, captions, storyboard, and Andrew voice SSML in [`demo/`](demo/). Every one of the ten sections begins with a question and continues in very simple conversational language.
+
+The target narration voice is Microsoft Azure `en-US-AndrewMultilingualNeural`. Because a voice-service key is never committed to source control, the repository contains a render script rather than credentials or bundled cloud-generated voice audio. The separate video kit includes the finished 1920 × 1080 visual master and original background music; adding an Azure Speech key produces the final Andrew-voiced three-minute MP4 without changing the scenes, captions, or timing.
+
+See [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) for the exact narration and [`docs/LIVE_DEMO_GUIDE.md`](docs/LIVE_DEMO_GUIDE.md) for the click-by-click live demonstration.
 
 ## Run locally
 
@@ -200,17 +209,17 @@ Current validated results:
 - Desktop and 390 × 844 mobile layouts have no horizontal overflow.
 - No console or uncaught page errors were detected.
 
-Detailed evidence is in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) and [`docs/career-buddy-e2e-results.json`](docs/career-buddy-e2e-results.json).
+Detailed evidence is in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) and [`docs/careercompass-e2e-results.json`](docs/careercompass-e2e-results.json).
 
 ## Project structure
 
 ```text
-PathwayOS-Career-Buddy-v2.3/
+CareerCompass-AI-WebMCP-v3.0/
 ├── data/
-│   └── pathwayos-career-catalog.json
+│   └── careercompass-career-catalog.json
 ├── src/
 │   ├── app.js                 Selection journey, scroll behavior, transitions, approvals
-│   ├── buddy-journey.js       Nine-step state model and six catalog-backed career groups
+│   ├── careercompass-journey.js       Nine-step state model and six catalog-backed career groups
 │   ├── career-catalog.js      JSON loading, normalization, exploration, comparisons
 │   ├── career-catalog-data.js Generated offline fallback for the supplied JSON
 │   ├── data.js                Curated academic MVP data
@@ -224,9 +233,10 @@ PathwayOS-Career-Buddy-v2.3/
 │   ├── build.mjs
 │   ├── check-webmcp.mjs       Repository and runtime WebMCP compliance check
 │   ├── sync-career-catalog.mjs
-│   └── career-buddy-browser-check.py
+│   └── careercompass-browser-check.py
 ├── tests/
 ├── mockups/
+├── demo/                  Narration, captions, storyboard, Andrew SSML, render scripts
 ├── docs/
 ├── styles.css
 └── index.html
@@ -234,4 +244,4 @@ PathwayOS-Career-Buddy-v2.3/
 
 ## MVP boundary
 
-The decision engine and conversation copy are deterministic and local; the app is not connected to a hosted LLM. Student, degree, and detailed opportunity records are demonstration data. PathwayOS does not enroll a student, submit an application, contact a professor, or modify a university system of record. Production use requires authentication, institution-specific degree adapters, verified live opportunity feeds, server-side authorization, privacy review, and audit controls.
+The decision engine and conversation copy are deterministic and local; the app is not connected to a hosted LLM. Student, degree, and detailed opportunity records are demonstration data. CareerCompass AI does not enroll a student, submit an application, contact a professor, or modify a university system of record. Production use requires authentication, institution-specific degree adapters, verified live opportunity feeds, server-side authorization, privacy review, and audit controls.

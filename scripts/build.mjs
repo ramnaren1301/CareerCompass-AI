@@ -13,8 +13,8 @@ const required = [
   "src/app.js",
   "src/webmcp.js",
   "src/site-tools.js",
-  "src/buddy-journey.js",
-  "data/pathwayos-career-catalog.json",
+  "src/careercompass-journey.js",
+  "data/careercompass-career-catalog.json",
   "manifest.webmanifest",
 ];
 
@@ -29,6 +29,6 @@ for (const item of ["index.html", "styles.css", "manifest.webmanifest", "service
 }
 await writeFile(
   resolve(dist, "build-info.json"),
-  JSON.stringify({ product: "PathwayOS", version: pkg.version, builtAt: new Date().toISOString() }, null, 2),
+  JSON.stringify({ product: "CareerCompass AI", version: pkg.version, builtAt: new Date().toISOString() }, null, 2),
 );
-console.log("Built PathwayOS into ./dist");
+console.log("Built CareerCompass AI into ./dist");

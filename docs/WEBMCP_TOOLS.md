@@ -1,6 +1,6 @@
 # WebMCP Tool Catalog
 
-PathwayOS registers **33 imperative site tools**. **25 are read/reason tools** and **8 are approval-gated writes**. The headings below describe tool domains, not independent student screens. The Career Buddy invokes only the domains needed by the current selected branch. Every write returns a pending approval rather than applying a persistent change.
+CareerCompass AI registers **33 imperative site tools**. **25 are read/reason tools** and **8 are approval-gated writes**. The headings below describe tool domains, not independent student screens. CareerCompass AI invokes only the domains needed by the current selected branch. Every write returns a pending approval rather than applying a persistent change.
 
 ## Repository implementation
 
@@ -9,7 +9,7 @@ PathwayOS registers **33 imperative site tools**. **25 are read/reason tools** a
 - `src/app.js` invokes registration during top-level page startup.
 - `npm run check:webmcp` validates source visibility and runtime behavior.
 
-`search_products` in the challenge rule is an illustrative example. PathwayOS registers domain-specific tools such as `list_career_fields`, `simulate_degree_plan`, and `find_internships`.
+`search_products` in the challenge rule is an illustrative example. CareerCompass AI registers domain-specific tools such as `list_career_fields`, `simulate_degree_plan`, and `find_internships`.
 
 ## Career Catalog — attached JSON
 
@@ -91,4 +91,4 @@ await document.modelContext.registerTool({
 
 ## Side-effect boundary
 
-Read tools can update the current guided step with simulations, rankings, and a selected career path, but do not persist official records. The eight write tools create a narrowly scoped pending approval. Only a direct student action in the PathwayOS interface can apply or reject that proposal.
+Read tools can update the current guided step with simulations, rankings, and a selected career path, but do not persist official records. The eight write tools create a narrowly scoped pending approval. Only a direct student action in the CareerCompass AI interface can apply or reject that proposal.

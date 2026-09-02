@@ -2,8 +2,8 @@ import { buildPersonalizedPathway, getCourse, getOpportunity, simulateDegreePlan
 import { student } from "./data.js";
 import { getCareerCatalogStatus, getCareerField } from "./career-catalog.js";
 
-const STORAGE_KEY = "pathwayos-demo-state-v6-career-buddy";
-const LEGACY_STORAGE_KEYS = ["pathwayos-demo-state-v2", "pathwayos-demo-state-v3", "pathwayos-demo-state-v4", "pathwayos-demo-state-v5"];
+const STORAGE_KEY = "careercompass-ai-demo-state-v6-careercompass-ai";
+const LEGACY_STORAGE_KEYS = ["careercompass-ai-demo-state-v2", "careercompass-ai-demo-state-v3", "careercompass-ai-demo-state-v4", "careercompass-ai-demo-state-v5"];
 const MIGRATION_STORAGE_KEYS = [];
 const now = () => new Date().toISOString();
 const id = (prefix) => `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -12,7 +12,7 @@ function createWelcomeMessage() {
   return {
     id: "welcome",
     role: "assistant",
-    label: "Welcome to PathwayOS",
+    label: "Welcome to CareerCompass AI",
     text: "Hi Maya — tell me what kind of work you want to do after graduation. I can help you choose a career, build a degree plan, find research, scholarships, and internships, and route important changes to your approval queue.",
     actions: [
       { label: "Help me choose a career", action: "choose-career", primary: true },

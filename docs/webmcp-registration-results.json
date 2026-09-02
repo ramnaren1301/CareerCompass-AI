@@ -1,6 +1,6 @@
 {
-  "product": "PathwayOS Career Buddy",
-  "version": "2.3.0",
+  "product": "CareerCompass AI",
+  "version": "3.0.0",
   "status": "PASS",
   "directRegisterToolCalls": 33,
   "uniqueLiteralToolNames": 33,

@@ -43,7 +43,7 @@ const stringArrayField = (description, maxItems = 10) => ({
   maxItems,
 });
 
-const shouldNavigateWorkspace = (source = "") => !["demo-agent", "pathway-chat", "career-buddy", "career-buddy-console", "tool-studio", "overview-selector", "human-ui"].includes(source);
+const shouldNavigateWorkspace = (source = "") => !["demo-agent", "pathway-chat", "careercompass-ai", "careercompass-ai-console", "tool-studio", "overview-selector", "human-ui"].includes(source);
 const workspaceView = (source, view) => shouldNavigateWorkspace(source) ? { view } : {};
 
 function assertNotAborted(signal) {
@@ -229,7 +229,7 @@ export function createWebMCPRuntime(store) {
     {
       name: "create_degree_plan",
       title: "Propose an official degree plan",
-      description: "Prepare a semester plan and place it in the student's approval queue. This tool does not change the official plan until the student explicitly approves it in PathwayOS.",
+      description: "Prepare a semester plan and place it in the student's approval queue. This tool does not change the official plan until the student explicitly approves it in CareerCompass AI.",
       inputSchema: objectSchema({
         careerGoal: stringField("Career goal to optimize for."),
         workload: stringField("Preferred workload.", { enum: ["lighter", "balanced", "accelerated"] }),
@@ -533,7 +533,7 @@ export function createWebMCPRuntime(store) {
   const registry = new Map(definitions.map((definition) => [definition.name, definition]));
   const execute = async (name, input = {}, source = "demo-agent") => {
     const definition = registry.get(name);
-    if (!definition) throw new Error(`Unknown PathwayOS tool: ${name}`);
+    if (!definition) throw new Error(`Unknown CareerCompass AI tool: ${name}`);
     return run(definition, input, source);
   };
 
@@ -608,7 +608,7 @@ export function createWebMCPRuntime(store) {
     const failures = [...registration.failures];
     if (discovery.error) failures.push({ name: "getTools", error: `${discovery.error.name}: ${discovery.error.message}` });
     if (discovery.supported && discovery.count !== expectedCount && !discovery.error) {
-      failures.push({ name: "discovery", error: `Chrome discovered ${discovery.count} of ${expectedCount} PathwayOS tools after registration.` });
+      failures.push({ name: "discovery", error: `Chrome discovered ${discovery.count} of ${expectedCount} CareerCompass AI tools after registration.` });
     }
     const status = native ? "registered" : registration.count > 0 ? "partial" : "registration_failed";
     const report = {

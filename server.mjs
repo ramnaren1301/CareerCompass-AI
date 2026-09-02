@@ -52,11 +52,11 @@ const server = createServer(async (request, response) => {
       "Origin-Agent-Cluster": "?1",
       "Permissions-Policy": "tools=(self), camera=(), microphone=(), geolocation=()",
     });
-    response.end(`PathwayOS server error: ${error instanceof Error ? error.message : "Unknown error"}`);
+    response.end(`CareerCompass AI server error: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
 });
 
 server.listen(port, "0.0.0.0", () => {
-  console.log(`PathwayOS running at http://localhost:${port}`);
+  console.log(`CareerCompass AI running at http://localhost:${port}`);
   console.log(`Serving ${root}`);
 });

@@ -1,93 +1,73 @@
-# PathwayOS Career Buddy 2.3 — Option-Driven Demo Script
+# CareerCompass AI — Three-Minute WebMCP Challenge Video Script
 
-## Story
+**Runtime:** exactly 3:00  
+**Target voice:** Andrew (`en-US-AndrewMultilingualNeural`)  
+**Format:** every section begins with a question and continues as a simple conversation.
 
-Use one student journey from beginning to end. Do not enter a free-form career and do not jump between modules.
+## 00:00–00:18
 
-## 1. Start with supported choices
+> **What if every student always knew the next step?**
+>
+> This is CareerCompass AI, a WebMCP career guide. It turns one big question—what should I do during my degree to reach my career goal?—into a simple path, one choice at a time.
 
-Open PathwayOS. Point out the six career-area cards and the absence of an open-ended career field.
+## 00:18–00:36
 
-Say:
+> **Why is career planning so confusing?**
+>
+> Courses are in one place. Prerequisites are in another. Internships, research, and scholarships are scattered across many sites. Students see a lot of information, but they still do not know what matters to them right now.
 
-> “PathwayOS starts with what this version can genuinely support. A student cannot type an unrelated career and accidentally receive fabricated guidance.”
+## 00:36–00:54
 
-Scroll within the center panel to show that the remaining choices are accessible while the title bar and selection footer stay stable.
+> **How does a student begin?**
+>
+> CareerCompass AI does not accept any random career and invent an answer. It starts with the career areas supported by its data. The student chooses an area, then a field, and then a specific role. Each choice removes what is no longer relevant.
 
-## 2. Choose a direction
+## 00:54–01:12
 
-Select **Build hardware, robots, and physical systems**.
+> **What happens after the student chooses Robotics Engineer?**
+>
+> The guide asks one practical question: what matters first? The student can focus on an internship, research, a portfolio, or staying on track for graduation. That answer changes every recommendation that follows.
 
-PathwayOS now displays only:
+## 01:12–01:30
 
-- Robotics
-- Embedded Systems / IoT
-- Electrical/Electronics Engineering
-- Mechanical Engineering
-- Chip Design / VLSI
+> **How does the degree become a real plan?**
+>
+> CareerCompass AI checks the student’s program, completed courses, prerequisites, graduation target, and preferred workload. It proposes one realistic next semester, explains why each course is there, and asks for approval before saving the plan.
 
-Say:
+## 01:30–01:48
 
-> “The other fifteen fields disappear. The buddy now goes deeper only inside the chosen direction.”
+> **How does the student build proof, not just take classes?**
+>
+> The guide narrows the next skill to only a few useful choices. For Robotics, that may be control systems, robot perception, or robotics programming. The student selects one skill, one learning action, and one small project that proves the skill.
 
-## 3. Choose the field and role
+## 01:48–02:06
 
-Select **Robotics**, then **Robotics Engineer**.
+> **How does that lead to a real opportunity?**
+>
+> CareerCompass AI uses the chosen role, course plan, skill, and priority to find a small number of matching internships, research options, and scholarships. It explains why each one fits, so the student does not search through hundreds of unrelated listings.
 
-PathwayOS binds the role to the shared journey and asks what outcome matters first.
+## 02:06–02:24
 
-## 4. Set the priority
+> **Where does WebMCP make the difference?**
+>
+> CareerCompass AI exposes clear tools that an AI agent can understand and use. The agent can list supported careers, check prerequisites, compare skills, find opportunities, and prepare a degree plan. The visible student journey and the agent use the same data and the same rules.
 
-Select **Land an internship**.
+## 02:24–02:42
 
-Explain that this changes the planning rationale and emphasizes internship readiness before research or generic portfolio work.
+> **Who stays in control?**
+>
+> The agent can read, compare, calculate, and recommend. But important changes stop and wait. A degree plan is not saved, an opportunity is not added, and an application status is not changed until the student confirms it.
 
-## 5. Choose the academic route
+## 02:42–03:00
 
-Review the current B.S. Computer Science degree fit. Select one of the academic routes offered by the app, such as keeping the current degree and bridging the gaps.
+> **What does the student leave with?**
+>
+> Not another dashboard full of information. The student leaves with a focused roadmap built from their own decisions: the next courses, the next skill, the next proof project, and the next opportunity. One student, one goal, and one clear path forward.
 
-Use the center panel's scrollbar to demonstrate that the full decision remains reachable at a shorter viewport.
+## Files used to render the video
 
-## 6. Review only the next semester
-
-Choose **Balanced** workload and select **Use this next-semester plan**.
-
-The `create_degree_plan` tool prepares a change but does not apply it. Select **Approve plan**.
-
-Say:
-
-> “The student confirms the plan inside the flow. There is no separate approvals dashboard to discover.”
-
-## 7. Choose one skill sprint
-
-Select **Control Systems** from the bounded skill choices.
-
-The buddy reveals one learning action and one proof project. Confirm the sprint.
-
-## 8. Choose one proof type
-
-Select **Internship**. Review the focused results and add one opportunity to the pathway.
-
-## 9. Decide whether funding matters now
-
-Choose a relevant funding lead or select **Skip funding for now**.
-
-## 10. Review the assembled roadmap
-
-The final roadmap contains only the selected:
-
-- Robotics Engineer role
-- internship priority
-- academic route
-- approved next semester
-- Control Systems sprint
-- experience opportunity
-- funding decision
-
-## 11. Show WebMCP without disrupting the student
-
-Open **Agent activity**. Show only the tools used in this journey, then close the drawer.
-
-Say:
-
-> “WebMCP is the operating layer behind the buddy, not another screen the student has to interpret.”
+- `demo/CareerCompass-AI-Andrew-Voice-Full-Narration.ssml` — complete Andrew voice direction.
+- `demo/Andrew-Voice-SSML/` — individually timed SSML for all ten sections.
+- `demo/CareerCompass-AI-3-Minute-Captions.srt` — complete captions.
+- `demo/render-andrew.py` — Azure Speech render and final-mux script.
+- `docs/LIVE_DEMO_GUIDE.md` — the separate click-by-click live presentation guide.

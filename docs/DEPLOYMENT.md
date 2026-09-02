@@ -1,6 +1,6 @@
 # Deployment
 
-PathwayOS is a static browser application with no runtime package dependencies.
+CareerCompass AI is a static browser application with no runtime package dependencies.
 
 ## Build
 
@@ -33,19 +33,19 @@ manifest.webmanifest
 service-worker.js
 src/
   site-tools.js
-data/pathwayos-career-catalog.json
+data/careercompass-career-catalog.json
 public/icon.svg
 ```
 
 ## Cache update
 
-Version 2.3 uses service-worker cache:
+Version 3.0 uses service-worker cache:
 
 ```text
-pathwayos-v9-native-webmcp-diagnostics
+careercompass-ai-v3-webmcp
 ```
 
-When replacing a v1.x deployment, deploy the complete `dist/` directory and perform one hard refresh so the browser removes the old multi-screen application cache and stored UI state.
+When replacing an earlier deployment, deploy the complete `dist/` directory and perform one hard refresh so the browser removes the old multi-screen application cache and stored UI state.
 
 ## Configuration boundary
 
@@ -64,7 +64,7 @@ Do not place API keys or student-system credentials in the static bundle.
 
 In a WebMCP-enabled browser or ChatGPT environment:
 
-1. Open the deployed PathwayOS URL.
+1. Open the deployed CareerCompass AI URL.
 2. Confirm that 33 tools register through `document.modelContext.registerTool()`.
 3. Select one supported career area, field, and role.
 4. Confirm that only the current journey step changes.
@@ -76,10 +76,10 @@ Ordinary browsers use the built-in runtime over the same definitions.
 ## Browser regression
 
 ```bash
-python scripts/career-buddy-browser-check.py
+python scripts/careercompass-browser-check.py
 ```
 
-The harness executes the built production modules through an inline import map. Results are written to `docs/career-buddy-e2e-results.json`.
+The harness executes the built production modules through an inline import map. Results are written to `docs/careercompass-e2e-results.json`.
 
 
 ## Required WebMCP headers
